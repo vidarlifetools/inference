@@ -1,0 +1,18 @@
+{
+    "Controller": {
+        "connections": {
+            "Camera": [
+                "View"
+            ]
+        }
+    },
+    "View": {
+        "name": "View",
+        "scale": 0.6
+    },
+    "Camera": {
+        "name": "Camera",
+        "fps": 15,
+        "video_path": "/home/vidar/projects/knowmeai/inference/processes/video.mp4"
+    }
+}
