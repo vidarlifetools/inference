@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.camera import CameraMessage
+from utilities.find_person import peoples
 import cv2
 
 import json
@@ -30,9 +31,12 @@ class View(DataModule):
 
     def __init__(self, *args):
         super().__init__(*args)
+        self.peoples = peoples()
 
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
+            boxes = self.peoples.detect(msg.image, threshold=0.9)
+            print(f"Boxes = {boxes}")
             width = int(msg.image.shape[1] * self.config.scale)
             height = int(msg.image.shape[0] * self.config.scale)
             dim = (width, height)
