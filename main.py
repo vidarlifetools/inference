@@ -22,6 +22,8 @@ from processes.view import view, MODULE_VIEW
 from processes.person import person, MODULE_PERSON
 from processes.face import face, MODULE_FACE
 from processes.pose import pose, MODULE_POSE
+from processes.audio import audio, MODULE_AUDIO
+from processes.audiofts import audiofts, MODULE_AUDIOFTS
 
 logging.basicConfig(
     level=logging.INFO,
@@ -54,14 +56,18 @@ MODULES = {
     MODULE_VIEW: view,
     MODULE_PERSON: person,
     MODULE_FACE: face,
-    MODULE_POSE: pose
+    MODULE_POSE: pose,
+    MODULE_AUDIO: audio,
+    MODULE_AUDIOFTS: audiofts
 }
 HOST_IPS = {
     MODULE_CAMERA: "192.168.10.215",
     MODULE_VIEW: "192.168.10.215",
     MODULE_PERSON: "192.168.10.215",
     MODULE_FACE: "192.168.10.215",
-    MODULE_POSE: "192.168.10.215"
+    MODULE_POSE: "192.168.10.215",
+    MODULE_AUDIO: "192.168.10.215",
+    MODULE_AUDIOFTS: "192.168.10.215"
 }
 
 @dataclass

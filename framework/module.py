@@ -98,7 +98,8 @@ class DataModule(Module):
             return
 
         if self.data_out is None:
-            raise RuntimeError
+            return
+            #raise RuntimeError
 
         self.data_out.send_pyobj(data)
 

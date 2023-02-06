@@ -3,7 +3,7 @@ import threading
 import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
-from time import sleep
+from time import sleep, time
 import cv2
 
 import json
@@ -13,6 +13,7 @@ MODULE_CAMERA = "Camera"
 
 @dataclass
 class CameraMessage:
+    timestamp: float = 0.0
     fps: int = 15
     image: np.array = None
 
@@ -39,9 +40,8 @@ class Camera(DataModule):
         if self.cap.isOpened():
             ret, frame = self.cap.read()
             if ret:
-                print(f"Frame no {self.frame_no}, ret = {ret}")
                 self.frame_no += 1
-                return CameraMessage(self.config.fps, frame)
+                return CameraMessage(time(), self.config.fps, frame)
             self.cap.release()
         else:
             return None

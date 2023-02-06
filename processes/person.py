@@ -17,6 +17,7 @@ MODULE_PERSON = "Person"
 
 @dataclass
 class PersonMessage:
+    timestamp: float = 0.0
     fps: int = 15
     image: np.array = None
 
@@ -51,7 +52,7 @@ class Person(DataModule):
             else:
                 # Crop the image to the person
                 x1, y1, x2, y2 = boxes[0]
-                return PersonMessage(msg.fps, resized[y1:y2, x1:x2].copy() )
+                return PersonMessage(msg.timestamp, msg.fps, resized[y1:y2, x1:x2].copy() )
         else:
             return None
 

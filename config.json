@@ -2,14 +2,16 @@
     "Controller": {
         "connections": {
             "Camera": [
-                "Person"
+                "Person",
+                "Audio",
+                "View"
             ],
             "Person": [
                 "Face",
                 "Pose"
             ],
-            "Pose": [
-                "View"
+            "Audio": [
+                "Audiofts"
             ]
         }
     },
@@ -19,6 +21,7 @@
     },
     "Face": {
         "name": "Face",
+        "view": false,
         "model_selection": 1,
         "max_num_faces": 1,
         "refine_landmarks": true,
@@ -27,9 +30,10 @@
     },
     "Pose": {
         "name": "Pose",
+        "view": false,
         "static_image_mode": false,
         "model_complexity": 2,
-        "enable_segmentation": true,
+        "enable_segmentation": false,
         "min_detection_confidence": 0.5,
         "min_tracking_confidence": 0.5
     },
@@ -40,6 +44,23 @@
     "Camera": {
         "name": "Camera",
         "fps": 15,
-        "video_path": "/home/vidar/projects/knowmeai/inference/processes/video.mp4"
-    }
+        "video_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-05-13-12-11-21-043349.mp4"
+    },
+    "Audio": {
+        "name": "Audio",
+        "audio_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-05-13-12-11-21-043349.wav"
+    },
+    "Audiofts": {
+        "name": "Audiofts",
+        "mean_norm": true,
+        "windowing": true,
+        "pre_emphasis": true,
+        "n_mfcc": 12,
+        "sample_rate": 16000,
+        "window_length": 0.032,
+        "window_step": 0.016,
+        "feature_length": 0.512,
+        "feature_step": 0.128,
+        "use_pitch": true
+   }
 }
