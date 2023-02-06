@@ -56,6 +56,6 @@ def camera(start, stop, config, status_uri, data_in_uris, data_out_ur):
     while not stop.is_set():
         sleep(0.1)
     proc.stop()
-    print("Ending proc1")
+    print("Ending Camera")
     sleep(0.5)
     exit()

@@ -2,13 +2,40 @@
     "Controller": {
         "connections": {
             "Camera": [
+                "Person"
+            ],
+            "Person": [
+                "Face",
+                "Pose"
+            ],
+            "Pose": [
                 "View"
             ]
         }
     },
     "View": {
         "name": "View",
-        "scale": 0.6
+        "scale": 1.0
+    },
+    "Face": {
+        "name": "Face",
+        "model_selection": 1,
+        "max_num_faces": 1,
+        "refine_landmarks": true,
+        "min_detection_confidence": 0.5,
+        "min_tracking_confidence": 0.5
+    },
+    "Pose": {
+        "name": "Pose",
+        "static_image_mode": false,
+        "model_complexity": 2,
+        "enable_segmentation": true,
+        "min_detection_confidence": 0.5,
+        "min_tracking_confidence": 0.5
+    },
+    "Person": {
+        "name": "Person",
+        "scale": 1.0
     },
     "Camera": {
         "name": "Camera",

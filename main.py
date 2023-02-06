@@ -19,6 +19,9 @@ import framework.message as message
 # Include module references
 from processes.camera import camera, MODULE_CAMERA
 from processes.view import view, MODULE_VIEW
+from processes.person import person, MODULE_PERSON
+from processes.face import face, MODULE_FACE
+from processes.pose import pose, MODULE_POSE
 
 logging.basicConfig(
     level=logging.INFO,
@@ -48,11 +51,17 @@ MODULE_CONTROLLER = "Controller"
 
 MODULES = {
     MODULE_CAMERA: camera,
-    MODULE_VIEW: view
+    MODULE_VIEW: view,
+    MODULE_PERSON: person,
+    MODULE_FACE: face,
+    MODULE_POSE: pose
 }
 HOST_IPS = {
     MODULE_CAMERA: "192.168.10.215",
-    MODULE_VIEW: "192.168.10.215"
+    MODULE_VIEW: "192.168.10.215",
+    MODULE_PERSON: "192.168.10.215",
+    MODULE_FACE: "192.168.10.215",
+    MODULE_POSE: "192.168.10.215"
 }
 
 @dataclass
@@ -114,7 +123,9 @@ class Controller(Module):
         for m in self.modules.values():
             m.start()
             logging.info(f"Started module: {m}")
-
+        WAIT_TIME = 5
+        logging.info(f"Waiting {WAIT_TIME} before issuing the start even")
+        time.sleep(WAIT_TIME)
         self.start_event.set()
 
         super().start()
