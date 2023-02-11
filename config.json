@@ -12,6 +12,18 @@
             ],
             "Audio": [
                 "Audiofts"
+            ],
+            "Audiofts": [
+                "Soundclass"
+            ],
+            "Face": [
+                "Faceclass"
+            ],
+            "Faceclass": [
+                "Compound"
+            ],
+            "Soundclass": [
+                "Compound"
             ]
         }
     },
@@ -44,17 +56,19 @@
     "Camera": {
         "name": "Camera",
         "fps": 15,
-        "video_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-05-13-12-11-21-043349.mp4"
+        "video_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.mp4"
     },
     "Audio": {
         "name": "Audio",
-        "audio_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-05-13-12-11-21-043349.wav"
+        "audio_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.wav"
     },
     "Audiofts": {
         "name": "Audiofts",
         "mean_norm": true,
         "windowing": true,
         "pre_emphasis": true,
+        "ampl_norm": false,
+        "noise_reduce": false,
         "n_mfcc": 12,
         "sample_rate": 16000,
         "window_length": 0.032,
@@ -62,5 +76,20 @@
         "feature_length": 0.512,
         "feature_step": 0.128,
         "use_pitch": true
-   }
+    },
+    "Soundclass": {
+        "name": "Soundclass",
+        "histogram_depth": 6,
+        "histogram_limit": 0.5,
+        "model_filename_client": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_client.pkl",
+        "model_filename_sound": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_sound.pkl",
+        "model_filename_split_sound": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_split_sound.pkl"
+    },
+    "Faceclass": {
+        "name": "Faceclass",
+        "model_filename_expression": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/svm_expression.pkl"
+    },
+    "Compound": {
+        "name": "Compound"
+    }
 }

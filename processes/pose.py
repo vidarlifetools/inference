@@ -55,6 +55,7 @@ class Face(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == PersonMessage:
+            #self.logger.info(f"Pose started processing at {time.time()}")
             results = self.mp_pose.process(msg.image)
             if results.pose_world_landmarks.landmark:
                 if self.config.view:
@@ -85,8 +86,8 @@ class Face(DataModule):
 
 
 def pose(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    print("Pose started", status_uri, data_in_uris, data_out_ur, flush=True)
     proc = Face(config, status_uri, data_in_uris, data_out_ur)
+    print(f"Pose started at {time.time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()

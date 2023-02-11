@@ -37,19 +37,25 @@ class Camera(DataModule):
     def produce_data(self):
 
         sleep(1/self.config.fps)
+        if self.frame_no == 1:
+            # Allow google MediaPipe process the first image
+            sleep(3)
         if self.cap.isOpened():
             ret, frame = self.cap.read()
             if ret:
                 self.frame_no += 1
+                self.logger.info(f"Camers sending frame {self.frame_no}")
                 return CameraMessage(time(), self.config.fps, frame)
-            self.cap.release()
         else:
             return None
 
+    def stop(self):
+        self.cap.release()
+        super().stop()
 
 def camera(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    print("Camera started", status_uri, data_in_uris, data_out_ur, flush=True)
     proc = Camera(config, status_uri, data_in_uris, data_out_ur)
+    print(f"Camera started at {time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()

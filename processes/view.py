@@ -40,7 +40,6 @@ class View(DataModule):
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
             # resize image
-            print("Person message received")
             width = int(msg.image.shape[1] * self.config.scale)
             height = int(msg.image.shape[0] * self.config.scale)
             dim = (width, height)
@@ -61,8 +60,8 @@ class View(DataModule):
 
 
 def view(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    print("View started", status_uri, data_in_uris, data_out_ur, flush=True)
     proc = View(config, status_uri, data_in_uris, data_out_ur)
+    print(f"View started at {time.time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()

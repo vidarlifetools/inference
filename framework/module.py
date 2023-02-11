@@ -10,6 +10,7 @@ import zmq
 from zmq.log.handlers import PUBHandler
 
 debug = False
+show_time = False
 
 def get_remote_logger(name, uri, level=logging.INFO):
     logger = logging.getLogger(name)
@@ -64,6 +65,8 @@ class DataModule(Module):
             self.data_out = zmq.Context().socket(zmq.PUB)
             self.data_out.bind(data_out_uri)
 
+        self.recv_msg_time = time.time()
+
     def close_sockets(self):
         for s in self.data_ins:
             s.close()
@@ -97,6 +100,9 @@ class DataModule(Module):
         if data is None:
             return
 
+        if show_time:
+            self.logger.info(f"Produce data for {str(self.config_class).split('.')[-2]} took {time.time()-self.recv_msg_time} sec")
+
         if self.data_out is None:
             return
             #raise RuntimeError
@@ -110,6 +116,7 @@ class DataModule(Module):
 
         try:
             data_msg = self.data_in.recv_pyobj(zmq.NOBLOCK)
+            self.recv_msg_time = time.time()
         except:
             time.sleep(0.01)
 

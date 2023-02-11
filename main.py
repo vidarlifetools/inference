@@ -22,8 +22,11 @@ from processes.view import view, MODULE_VIEW
 from processes.person import person, MODULE_PERSON
 from processes.face import face, MODULE_FACE
 from processes.pose import pose, MODULE_POSE
-from processes.audio import audio, MODULE_AUDIO
-from processes.audiofts import audiofts, MODULE_AUDIOFTS
+from processes.sound import audio, MODULE_AUDIO
+from processes.soundfts import audiofts, MODULE_AUDIOFTS
+from processes.soundclass import soundclass, MODULE_SOUNDCLASS
+from processes.faceclass import faceclass, MODULE_FACECLASS
+from processes.compound import compound, MODULE_COMPOUND
 
 logging.basicConfig(
     level=logging.INFO,
@@ -58,7 +61,10 @@ MODULES = {
     MODULE_FACE: face,
     MODULE_POSE: pose,
     MODULE_AUDIO: audio,
-    MODULE_AUDIOFTS: audiofts
+    MODULE_AUDIOFTS: audiofts,
+    MODULE_SOUNDCLASS: soundclass,
+    MODULE_FACECLASS: faceclass,
+    MODULE_COMPOUND: compound
 }
 HOST_IPS = {
     MODULE_CAMERA: "192.168.10.215",
@@ -67,7 +73,10 @@ HOST_IPS = {
     MODULE_FACE: "192.168.10.215",
     MODULE_POSE: "192.168.10.215",
     MODULE_AUDIO: "192.168.10.215",
-    MODULE_AUDIOFTS: "192.168.10.215"
+    MODULE_AUDIOFTS: "192.168.10.215",
+    MODULE_SOUNDCLASS: "192.168.10.215",
+    MODULE_FACECLASS: "192.168.10.215",
+    MODULE_COMPOUND: "192.168.10.215"
 }
 
 @dataclass
@@ -98,7 +107,7 @@ class Controller(Module):
         assert modules
         self.modules = dict()
         local_ip = get_local_ip()
-        logging.info(f"This machine has IP address {local_ip}")
+        #logging.info(f"This machine has IP address {local_ip}")
         data_ports = dict(zip(modules.nodes, range(60020, 60030)))
 
         for n in modules.nodes:
@@ -108,20 +117,20 @@ class Controller(Module):
             if list(modules.successors(n)):
                 #out = f"tcp://*:{data_ports[n]}"
                 out = f"tcp://*:{data_ports[n]}"
-                logging.info(f"Module {str(n)} has port {data_ports[n]} and IP address {HOST_IPS[n]}")
+                #logging.info(f"Module {str(n)} has port {data_ports[n]} and IP address {HOST_IPS[n]}")
 
             config = self.config.module_configs.get(n)
             # Only include modules that runs on the same machine, have same IP address
             if local_ip == HOST_IPS[n]:
-                logging.info(f"{n} is running on this machine")
+                #logging.info(f"{n} is running on this machine")
 
                 self.modules[n] = Process(target=MODULES[n], args=(
                     self.start_event, self.stop_event, config, f"tcp://localhost:{message.STATUS_PORT}", ins, out ))
 #                self.modules[n] = MODULES[n](
 #                    config, f"tcp://localhost:{message.STATUS_PORT}", ins, out
 #                )
-            else:
-                logging.info(f"{n} is running on a machine with IP address {HOST_IPS[n]}")
+            #else:
+                #logging.info(f"{n} is running on a machine with IP address {HOST_IPS[n]}")
 
         logging.info("Initialized")
 

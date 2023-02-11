@@ -45,18 +45,20 @@ class Audio(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
+            #self.logger.info(f"Sound processing started")
             # Create a buffer with audio samples covering time between frames
             no_of_samples = int(self.sr / msg.fps)
             if self.audio_idx + no_of_samples < len(self.audio):
                 audio_buffer = self.audio[self.audio_idx:self.audio_idx+no_of_samples]
+                self.audio_idx += no_of_samples
                 return AudioMessage(msg.timestamp, True, self.sr, audio_buffer)
         #else:
         #    return AudioMessage(False, self.sr, None)
 
 
 def audio(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    print("Audio started", status_uri, data_in_uris, data_out_ur, flush=True)
     proc = Audio(config, status_uri, data_in_uris, data_out_ur)
+    print(f"Audio started at {time.time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()

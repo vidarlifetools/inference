@@ -39,14 +39,17 @@ class Person(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
+            #self.logger.info(f"Person processing started")
             width = int(msg.image.shape[1] * self.config.scale)
             height = int(msg.image.shape[0] * self.config.scale)
             dim = (width, height)
 
             # resize image
             resized = cv2.resize(msg.image, dim, interpolation=cv2.INTER_AREA)
+            #self.logger.info(f"Person, image resized")
 
             boxes = self.peoples.detect(resized, threshold=0.9)
+            #self.logger.info(f"Person, people detected")
             if boxes[0] is None:
                 return None
             else:
@@ -58,8 +61,8 @@ class Person(DataModule):
 
 
 def person(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    print("Find_person started", status_uri, data_in_uris, data_out_ur, flush=True)
     proc = Person(config, status_uri, data_in_uris, data_out_ur)
+    print(f"Find_person started at {time.time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()

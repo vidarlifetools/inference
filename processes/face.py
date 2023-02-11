@@ -50,13 +50,25 @@ class Face(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == PersonMessage:
+            #self.logger.info(f"Face processing started")
             results = self.mediapipe_face.process(msg.image)
+            face_landmarks = np.zeros((468, 3), dtype=float)
             if results.multi_face_landmarks:
                 if self.config.view:
                     self.view_face(msg.image, results.multi_face_landmarks[0])
+                first = True
+                for landmarks in results.multi_face_landmarks:
+                    i=0
+                    if first:
+                        for landmark in landmarks.landmark:
+                            face_landmarks[i, :] = [landmark.x * msg.image.shape[1],
+                                                    landmark.y * msg.image.shape[0],
+                                                    landmark.z * -1000.0]
+                            i += 1
+                face_landmarks = np.matmul(face_landmarks, [[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
                 #print(f"Face landmarks found, {len(results.multi_face_landmarks)}, {len(results.multi_face_landmarks[0])}")
-                return FaceMessage(msg.timestamp, True, results.multi_face_landmarks[0], msg.image)
+                return FaceMessage(msg.timestamp, True, face_landmarks, msg.image)
             else:
                 return FaceMessage(msg.timestamp, False, None, msg.image)
         else:
@@ -77,8 +89,8 @@ class Face(DataModule):
 
 
 def face(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    print("Face started", status_uri, data_in_uris, data_out_ur, flush=True)
     proc = Face(config, status_uri, data_in_uris, data_out_ur)
+    print(f"Face started at {time.time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()
