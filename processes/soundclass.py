@@ -10,7 +10,7 @@ import pickle
 from utilities.sound_utils import sound_feature
 from utilities.ring_buffer import ring_buffer
 
-from utilities.find_person import peoples
+from utilities.person_utils import peoples
 from utilities.draw import draw_bbox
 import cv2
 import soundfile as sf
@@ -60,11 +60,11 @@ class Soundclass(DataModule):
             timestamps = []
             valids = []
             classes = []
-            for i in range(len(msg.timestamp)):
-                valid, sound_class = self.sound_prediction.sound_class(msg.feature[i])
+            for i in range(len(msg.features)):
+                valid, sound_class = self.sound_prediction.get_class(msg.features[i])
                 valids.append(valid)
                 classes.append(sound_class)
-                timestamps.append(msg.timestamp[i])
+                timestamps.append(msg.timestamps[i])
                 #print(f"Sound feature {msg.feature[i]} class {sound_class}")
             return SoundclassMessage(timestamps, valids, classes)
 

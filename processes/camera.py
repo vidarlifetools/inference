@@ -44,8 +44,9 @@ class Camera(DataModule):
             ret, frame = self.cap.read()
             if ret:
                 self.frame_no += 1
-                self.logger.info(f"Camers sending frame {self.frame_no}")
-                return CameraMessage(time(), self.config.fps, frame)
+                timestamp = time()
+                #self.logger.info(f"Camers sending frame {self.frame_no} with timestamp {timestamp}")
+                return CameraMessage(timestamp, self.config.fps, frame)
         else:
             return None
 

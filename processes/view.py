@@ -7,7 +7,7 @@ from time import sleep
 from processes.person import PersonMessage
 from processes.pose import PoseMessage
 from processes.camera import CameraMessage
-from utilities.find_person import peoples
+from utilities.person_utils import peoples
 from utilities.draw import draw_bbox
 import cv2
 import mediapipe as mp

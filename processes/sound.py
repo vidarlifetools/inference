@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.camera import CameraMessage
-from utilities.find_person import peoples
+from utilities.person_utils import peoples
 from utilities.draw import draw_bbox
 import cv2
 import soundfile as sf

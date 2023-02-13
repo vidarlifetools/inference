@@ -20,12 +20,13 @@ import framework.message as message
 from processes.camera import camera, MODULE_CAMERA
 from processes.view import view, MODULE_VIEW
 from processes.person import person, MODULE_PERSON
-from processes.face import face, MODULE_FACE
+from processes.expr import expr, MODULE_EXPR
 from processes.pose import pose, MODULE_POSE
 from processes.sound import audio, MODULE_AUDIO
 from processes.soundfts import audiofts, MODULE_AUDIOFTS
 from processes.soundclass import soundclass, MODULE_SOUNDCLASS
-from processes.faceclass import faceclass, MODULE_FACECLASS
+from processes.exprclass import exprclass, MODULE_EXPRCLASS
+from processes.gestureclass import gestureclass, MODULE_GESTURECLASS
 from processes.compound import compound, MODULE_COMPOUND
 
 logging.basicConfig(
@@ -58,24 +59,26 @@ MODULES = {
     MODULE_CAMERA: camera,
     MODULE_VIEW: view,
     MODULE_PERSON: person,
-    MODULE_FACE: face,
+    MODULE_EXPR: expr,
     MODULE_POSE: pose,
     MODULE_AUDIO: audio,
     MODULE_AUDIOFTS: audiofts,
     MODULE_SOUNDCLASS: soundclass,
-    MODULE_FACECLASS: faceclass,
+    MODULE_EXPRCLASS: exprclass,
+    MODULE_GESTURECLASS: gestureclass,
     MODULE_COMPOUND: compound
 }
 HOST_IPS = {
     MODULE_CAMERA: "192.168.10.215",
     MODULE_VIEW: "192.168.10.215",
     MODULE_PERSON: "192.168.10.215",
-    MODULE_FACE: "192.168.10.215",
+    MODULE_EXPR: "192.168.10.215",
     MODULE_POSE: "192.168.10.215",
     MODULE_AUDIO: "192.168.10.215",
     MODULE_AUDIOFTS: "192.168.10.215",
     MODULE_SOUNDCLASS: "192.168.10.215",
-    MODULE_FACECLASS: "192.168.10.215",
+    MODULE_EXPRCLASS: "192.168.10.215",
+    MODULE_GESTURECLASS: "192.168.10.215",
     MODULE_COMPOUND: "192.168.10.215"
 }
 
@@ -108,7 +111,7 @@ class Controller(Module):
         self.modules = dict()
         local_ip = get_local_ip()
         #logging.info(f"This machine has IP address {local_ip}")
-        data_ports = dict(zip(modules.nodes, range(60020, 60030)))
+        data_ports = dict(zip(modules.nodes, range(60030, 60050)))
 
         for n in modules.nodes:
             ins = [f"tcp://{HOST_IPS[x]}:{data_ports[x]}" for x in modules.predecessors(n)]

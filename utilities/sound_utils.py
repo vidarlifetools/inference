@@ -8,7 +8,6 @@ import pickle
 #from pydub import AudioSegment
 from array import array
 from utilities.pyrapt import pitch
-
 #import torch
 
 
@@ -65,7 +64,7 @@ class sound_feature:
         return feature
 
 
-class sound_prediction():
+class sound_prediction:
     def __init__(self, model_filename_source, model_filename_client, model_filename_sound, histogram_depth, histogram_limit = 0.0):
         with open(model_filename_source, "rb") as file:
             self.source_model = pickle.load(file)
@@ -79,7 +78,10 @@ class sound_prediction():
         self.hist_idx = 0
         print(f"Histogram limit = {histogram_limit},histogram depth = {histogram_depth}")
 
-    def sound_class(self, ft):
+    def get_class(self, ft):
+        if len(ft) != 416:
+            b = np.zeros((416 - len(ft),), dtype=float)
+            ft = np.append(ft, b)
         pred = self.source_model.predict_proba((ft,))
         cl_cl = self.client_model.predict((ft,))
         self.histogram[self.hist_idx] *= 0.0

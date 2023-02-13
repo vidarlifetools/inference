@@ -14,10 +14,10 @@ import time
 import json
 
 
-MODULE_FACE = "Face"
+MODULE_EXPR = "Expr"
 
 @dataclass
-class FaceMessage:
+class ExprMessage:
     timestamp: float = 0.0
     valid: bool = True
     landmarks: np.array = None
@@ -25,7 +25,7 @@ class FaceMessage:
 
 
 @dataclass
-class FaceConfig:
+class ExprConfig:
     name: str = ""
     view: bool = False
     max_num_faces: int = 1
@@ -34,9 +34,9 @@ class FaceConfig:
     min_tracking_confidence: float = 0.5
 
 
-class Face(DataModule):
-    name = MODULE_FACE
-    config_class = FaceConfig
+class Expr(DataModule):
+    name = MODULE_EXPR
+    config_class = ExprConfig
 
     def __init__(self, *args):
         super().__init__(*args)
@@ -50,9 +50,9 @@ class Face(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == PersonMessage:
-            #self.logger.info(f"Face processing started")
+            #self.logger.info(f"Expr processing started")
             results = self.mediapipe_face.process(msg.image)
-            face_landmarks = np.zeros((468, 3), dtype=float)
+            face_landmarks = np.zeros((478, 3), dtype=float)
             if results.multi_face_landmarks:
                 if self.config.view:
                     self.view_face(msg.image, results.multi_face_landmarks[0])
@@ -60,17 +60,19 @@ class Face(DataModule):
                 for landmarks in results.multi_face_landmarks:
                     i=0
                     if first:
+                        #print(f"Length og landmarks {len(landmarks.landmark)}")
                         for landmark in landmarks.landmark:
                             face_landmarks[i, :] = [landmark.x * msg.image.shape[1],
                                                     landmark.y * msg.image.shape[0],
                                                     landmark.z * -1000.0]
                             i += 1
+                        first = False
                 face_landmarks = np.matmul(face_landmarks, [[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
-                #print(f"Face landmarks found, {len(results.multi_face_landmarks)}, {len(results.multi_face_landmarks[0])}")
-                return FaceMessage(msg.timestamp, True, face_landmarks, msg.image)
+                #print(f"Expr landmarks found, {len(results.multi_face_landmarks)}, {len(results.multi_face_landmarks[0])}")
+                return ExprMessage(msg.timestamp, True, face_landmarks, msg.image)
             else:
-                return FaceMessage(msg.timestamp, False, None, msg.image)
+                return ExprMessage(msg.timestamp, False, None, msg.image)
         else:
             return None
 
@@ -84,19 +86,19 @@ class Face(DataModule):
             connections=mp_face_mesh.FACEMESH_TESSELATION,
             landmark_drawing_spec=None,
             connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_tesselation_style())
-        cv2.imshow('MediaPipe Face Mesh', cv2.flip(image, 1))
+        cv2.imshow('MediaPipe Expr Mesh', cv2.flip(image, 1))
         cv2.waitKey(1)
 
 
-def face(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    proc = Face(config, status_uri, data_in_uris, data_out_ur)
-    print(f"Face started at {time.time()}")
+def expr(start, stop, config, status_uri, data_in_uris, data_out_ur):
+    proc = Expr(config, status_uri, data_in_uris, data_out_ur)
+    print(f"Expr started at {time.time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()
     while not stop.is_set():
         sleep(0.1)
     proc.stop()
-    print("Ending Face")
+    print("Ending Expr")
     sleep(0.5)
     exit()

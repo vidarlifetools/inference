@@ -8,7 +8,7 @@ from processes.sound import AudioMessage
 from utilities.sound_utils import sound_feature
 from utilities.ring_buffer import ring_buffer
 
-from utilities.find_person import peoples
+from utilities.person_utils import peoples
 from utilities.draw import draw_bbox
 import cv2
 import soundfile as sf
@@ -22,12 +22,9 @@ MODULE_AUDIOFTS = "Audiofts"
 
 @dataclass
 class AudioftsMessage:
-#    timestamp: float = None
-#    valid: bool = True
-#    feature: list = None
-    timestamp: list = None
-    valid: list = True
-    feature: list = None
+    timestamps: list = None
+    valids: list = True
+    features: list = None
 
 
 @dataclass
@@ -88,7 +85,8 @@ class Audiofts(DataModule):
                 features.append(self.sound_feature.get_feature(self.audio_buffer))
                 valids.append(True)
                 timestamp += self.config.feature_step
-            return AudioftsMessage(timestamps, valids, features)
+            if len(features) > 0:
+                return AudioftsMessage(timestamps, valids, features)
 
 
 def audiofts(start, stop, config, status_uri, data_in_uris, data_out_ur):

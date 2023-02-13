@@ -20,7 +20,7 @@ MODULE_POSE = "Pose"
 class PoseMessage:
     timestamp: float = 0.0
     valid: bool = True
-    landmarks: np.array = None
+    keypoints: np.array = None
     image: np.array = None
 
 
@@ -68,6 +68,7 @@ class Face(DataModule):
                                     mapping_table[i] <= 12) else 0.0
                         pose_3d[mapping_table[i], :] = [landmark.x * 1000.0, landmark.y * 1000.0, landmark.z * 1000.0,
                                                         conf, 0.0]
+                return PoseMessage(msg.timestamp, True, pose_3d, msg.image)
             else:
                 return PoseMessage(msg.timestamp, False, None, msg.image)
         else:

@@ -7,7 +7,7 @@
                 "View"
             ],
             "Person": [
-                "Face",
+                "Expr",
                 "Pose"
             ],
             "Audio": [
@@ -16,10 +16,16 @@
             "Audiofts": [
                 "Soundclass"
             ],
-            "Face": [
-                "Faceclass"
+            "Expr": [
+                "Exprclass"
             ],
-            "Faceclass": [
+            "Exprclass": [
+                "Compound"
+            ],
+            "Pose": [
+                "Gestureclass"
+            ],
+            "Gestureclass": [
                 "Compound"
             ],
             "Soundclass": [
@@ -29,10 +35,10 @@
     },
     "View": {
         "name": "View",
-        "scale": 1.0
+        "scale": 0.2
     },
-    "Face": {
-        "name": "Face",
+    "Expr": {
+        "name": "Expr",
         "view": false,
         "model_selection": 1,
         "max_num_faces": 1,
@@ -75,7 +81,7 @@
         "window_step": 0.016,
         "feature_length": 0.512,
         "feature_step": 0.128,
-        "use_pitch": true
+        "use_pitch": false
     },
     "Soundclass": {
         "name": "Soundclass",
@@ -85,11 +91,19 @@
         "model_filename_sound": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_sound.pkl",
         "model_filename_split_sound": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_split_sound.pkl"
     },
-    "Faceclass": {
-        "name": "Faceclass",
+    "Exprclass": {
+        "name": "Exprclass",
         "model_filename_expression": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/svm_expression.pkl"
     },
+    "Gestureclass": {
+        "name": "Gestureclass",
+        "model_filename_pose": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/svm_pose.pkl",
+        "model_filename_gesture": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/svm_gesture.pkl"
+    },
     "Compound": {
-        "name": "Compound"
+        "name": "Compound",
+        "nof_gesture_classes": 10,
+        "nof_expr_classes": 10,
+        "nof_sound_classes": 10
     }
 }
