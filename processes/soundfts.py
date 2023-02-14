@@ -1,34 +1,24 @@
 # import time
-import threading
 import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
-from processes.sound import AudioMessage
-from utilities.sound_utils import sound_feature
+from processes.sound import SoundMessage
+from sound_utils import sound_feature
 from utilities.ring_buffer import ring_buffer
-
-from utilities.person_utils import peoples
-from utilities.draw import draw_bbox
-import cv2
-import soundfile as sf
-
 import time
 
-import json
-
-
-MODULE_AUDIOFTS = "Audiofts"
+MODULE_SOUNDFTS = "Soundfts"
 
 @dataclass
-class AudioftsMessage:
-    timestamps: list = None
-    valids: list = True
-    features: list = None
+class SoundftsMessage:
+    timestamp: list = None
+    valid: list = True
+    feature: list = None
 
 
 @dataclass
-class AudioftsConfig:
+class SoundftsConfig:
     name: str = ""
     mean_norm: bool = True
     windowing: bool = True
@@ -44,9 +34,9 @@ class AudioftsConfig:
     use_pitch: bool = True
 
 
-class Audiofts(DataModule):
-    name = MODULE_AUDIOFTS
-    config_class = AudioftsConfig
+class Soundfts(DataModule):
+    name = MODULE_SOUNDFTS
+    config_class = SoundftsConfig
 
     def __init__(self, *args):
         super().__init__(*args)
@@ -72,32 +62,23 @@ class Audiofts(DataModule):
         )
 
     def process_data_msg(self, msg):
-        if type(msg) == AudioMessage:
+        if type(msg) == SoundMessage:
             #self.logger.info(f"Soundfts processing started")
-            self.ring_buffer.put(msg.audio)
-            timestamp = msg.timestamp
-            timestamps = []
-            valids = []
-            features = []
-            while self.ring_buffer.get_length() > self.audio_buffer_size:
+            self.ring_buffer.put(msg.samples)
+            if self.ring_buffer.get_length() > self.audio_buffer_size:
                 self.ring_buffer.get(self.audio_buffer, self.audio_buffer_size, self.audio_buffer_step)
-                timestamps.append(timestamp)
-                features.append(self.sound_feature.get_feature(self.audio_buffer))
-                valids.append(True)
-                timestamp += self.config.feature_step
-            if len(features) > 0:
-                return AudioftsMessage(timestamps, valids, features)
+                return SoundftsMessage(msg.timestamp, True, self.sound_feature.get_feature(self.audio_buffer))
 
 
-def audiofts(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    proc = Audiofts(config, status_uri, data_in_uris, data_out_ur)
-    print(f"Audiofts started at {time.time()}")
+def soundfts(start, stop, config, status_uri, data_in_uris, data_out_ur):
+    proc = Soundfts(config, status_uri, data_in_uris, data_out_ur)
+    print(f"Soundfts started at {time.time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()
     while not stop.is_set():
         sleep(0.1)
     proc.stop()
-    print("Ending Audiofts")
+    print("Ending Soundfts")
     sleep(0.5)
     exit()

@@ -1,10 +1,9 @@
 # import time
-import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.expr import ExprMessage
-from utilities.expr_utils import expr_prediction
+from expr_utils import expr_prediction
 import time
 
 

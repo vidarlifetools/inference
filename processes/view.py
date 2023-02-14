@@ -1,20 +1,12 @@
 # import time
-import threading
 import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.person import PersonMessage
-from processes.pose import PoseMessage
 from processes.camera import CameraMessage
-from utilities.person_utils import peoples
-from utilities.draw import draw_bbox
 import cv2
-import mediapipe as mp
 import time
-
-import json
-
 
 MODULE_VIEW = "View"
 
@@ -44,7 +36,6 @@ class View(DataModule):
             height = int(msg.image.shape[0] * self.config.scale)
             dim = (width, height)
             resized = cv2.resize(msg.image, dim, interpolation=cv2.INTER_AREA)
-
             cv2.imshow("Raw image", resized)
             cv2.waitKey(1)
         if type(msg) == PersonMessage:

@@ -1,24 +1,10 @@
 # import time
-import threading
-import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
-from processes.soundfts import AudioftsMessage
-from utilities.sound_utils import sound_prediction
-import pickle
-from utilities.sound_utils import sound_feature
-from utilities.ring_buffer import ring_buffer
-
-from utilities.person_utils import peoples
-from utilities.draw import draw_bbox
-import cv2
-import soundfile as sf
-
+from processes.soundfts import SoundftsMessage
+from sound_utils import sound_prediction
 import time
-
-import json
-
 
 MODULE_SOUNDCLASS = "Soundclass"
 
@@ -55,18 +41,11 @@ class Soundclass(DataModule):
         self.sound_prediction.clear_histogram()
 
     def process_data_msg(self, msg):
-        if type(msg) == AudioftsMessage:
+        if type(msg) == SoundftsMessage:
             #self.logger.info(f"Soundclass processing started")
-            timestamps = []
-            valids = []
-            classes = []
-            for i in range(len(msg.features)):
-                valid, sound_class = self.sound_prediction.get_class(msg.features[i])
-                valids.append(valid)
-                classes.append(sound_class)
-                timestamps.append(msg.timestamps[i])
-                #print(f"Sound feature {msg.feature[i]} class {sound_class}")
-            return SoundclassMessage(timestamps, valids, classes)
+            valid, sound_class = self.sound_prediction.get_class(msg.feature)
+            #print(f"Sound feature {msg.feature[i]} class {sound_class}")
+            return SoundclassMessage(msg.timestamp, valid, sound_class)
 
 
 def soundclass(start, stop, config, status_uri, data_in_uris, data_out_ur):

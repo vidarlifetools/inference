@@ -1,70 +1,62 @@
 # import time
-import threading
 import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.camera import CameraMessage
-from utilities.person_utils import peoples
-from utilities.draw import draw_bbox
-import cv2
 import soundfile as sf
-
 import time
 
-import json
-
-
-MODULE_AUDIO = "Audio"
+MODULE_SOUND = "Sound"
 
 @dataclass
-class AudioMessage:
+class SoundMessage:
     timestamp: float = 0.0
     valid: bool = True
     sr: int = 16000
-    audio: np.array = None
+    samples: np.array = None
 
 
 @dataclass
-class AudioConfig:
+class SoundConfig:
     name: str = ""
-    audio_path: str = ""
+    sound_path: str = ""
 
 
-class Audio(DataModule):
-    name = MODULE_AUDIO
-    config_class = AudioConfig
+class Sound(DataModule):
+    name = MODULE_SOUND
+    config_class = SoundConfig
 
     def __init__(self, *args):
         super().__init__(*args)
-        sound_file = self.config.audio_path
-        self.audio, self.sr = sf.read(sound_file)
-        if len(self.audio.shape) > 1:
-            self.audio = self.audio[:,0]
-        self.audio_idx = 0
+        sound_file = self.config.sound_path
+        self.samples, self.sr = sf.read(sound_file)
+        if len(self.samples.shape) > 1:
+            self.samples = self.samples[:,0]
+        self.sound_idx = 0
 
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
             #self.logger.info(f"Sound processing started")
             # Create a buffer with audio samples covering time between frames
             no_of_samples = int(self.sr / msg.fps)
-            if self.audio_idx + no_of_samples < len(self.audio):
-                audio_buffer = self.audio[self.audio_idx:self.audio_idx+no_of_samples]
-                self.audio_idx += no_of_samples
-                return AudioMessage(msg.timestamp, True, self.sr, audio_buffer)
+            if self.sound_idx + no_of_samples < len(self.samples):
+                sound_buffer = self.samples[self.sound_idx:self.sound_idx+no_of_samples]
+                self.sound_idx += no_of_samples
+                return SoundMessage(msg.timestamp, True, self.sr, sound_buffer)
         #else:
         #    return AudioMessage(False, self.sr, None)
 
 
-def audio(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    proc = Audio(config, status_uri, data_in_uris, data_out_ur)
-    print(f"Audio started at {time.time()}")
+def sound(start, stop, config, status_uri, data_in_uris, data_out_ur):
+    proc = Sound(config, status_uri, data_in_uris, data_out_ur)
+    print(f"Sound started at {time.time()}")
     while not start.is_set():
         sleep(0.1)
     proc.start()
     while not stop.is_set():
         sleep(0.1)
     proc.stop()
-    print("Ending Audio")
+    print("Ending Sound")
     sleep(0.5)
     exit()

@@ -1,17 +1,12 @@
 # import time
-import threading
 import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.camera import CameraMessage
 from utilities.person_utils import peoples
-from utilities.draw import draw_bbox
 import cv2
 import time
-
-import json
-
 
 MODULE_PERSON = "Person"
 

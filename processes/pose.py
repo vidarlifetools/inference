@@ -1,5 +1,4 @@
 # import time
-import threading
 import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
@@ -7,12 +6,7 @@ from time import sleep
 from processes.person import PersonMessage
 import cv2
 import mediapipe as mp
-
-
 import time
-
-import json
-
 
 MODULE_POSE = "Pose"
 

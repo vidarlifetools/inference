@@ -3,18 +3,22 @@
         "connections": {
             "Camera": [
                 "Person",
-                "Audio",
-                "View"
+                "Sound",
+                "View",
+                "Present"
             ],
             "Person": [
                 "Expr",
                 "Pose"
             ],
-            "Audio": [
-                "Audiofts"
+            "Sound": [
+                "Soundfts"
             ],
-            "Audiofts": [
+            "Soundfts": [
                 "Soundclass"
+            ],
+            "Soundclass": [
+                "Compound"
             ],
             "Expr": [
                 "Exprclass"
@@ -28,13 +32,17 @@
             "Gestureclass": [
                 "Compound"
             ],
-            "Soundclass": [
-                "Compound"
+            "Compound": [
+                "Present"
             ]
         }
     },
     "View": {
         "name": "View",
+        "scale": 0.2
+    },
+    "Present": {
+        "name": "Present",
         "scale": 0.2
     },
     "Expr": {
@@ -64,12 +72,12 @@
         "fps": 15,
         "video_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.mp4"
     },
-    "Audio": {
-        "name": "Audio",
-        "audio_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.wav"
+    "Sound": {
+        "name": "Sound",
+        "sound_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.wav"
     },
-    "Audiofts": {
-        "name": "Audiofts",
+    "Soundfts": {
+        "name": "Soundfts",
         "mean_norm": true,
         "windowing": true,
         "pre_emphasis": true,

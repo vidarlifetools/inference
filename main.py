@@ -22,12 +22,13 @@ from processes.view import view, MODULE_VIEW
 from processes.person import person, MODULE_PERSON
 from processes.expr import expr, MODULE_EXPR
 from processes.pose import pose, MODULE_POSE
-from processes.sound import audio, MODULE_AUDIO
-from processes.soundfts import audiofts, MODULE_AUDIOFTS
+from processes.sound import sound, MODULE_SOUND
+from processes.soundfts import soundfts, MODULE_SOUNDFTS
 from processes.soundclass import soundclass, MODULE_SOUNDCLASS
 from processes.exprclass import exprclass, MODULE_EXPRCLASS
 from processes.gestureclass import gestureclass, MODULE_GESTURECLASS
 from processes.compound import compound, MODULE_COMPOUND
+from processes.present import present, MODULE_PRESENT
 
 logging.basicConfig(
     level=logging.INFO,
@@ -61,12 +62,13 @@ MODULES = {
     MODULE_PERSON: person,
     MODULE_EXPR: expr,
     MODULE_POSE: pose,
-    MODULE_AUDIO: audio,
-    MODULE_AUDIOFTS: audiofts,
+    MODULE_SOUND: sound,
+    MODULE_SOUNDFTS: soundfts,
     MODULE_SOUNDCLASS: soundclass,
     MODULE_EXPRCLASS: exprclass,
     MODULE_GESTURECLASS: gestureclass,
-    MODULE_COMPOUND: compound
+    MODULE_COMPOUND: compound,
+    MODULE_PRESENT: present
 }
 HOST_IPS = {
     MODULE_CAMERA: "192.168.10.215",
@@ -74,12 +76,13 @@ HOST_IPS = {
     MODULE_PERSON: "192.168.10.215",
     MODULE_EXPR: "192.168.10.215",
     MODULE_POSE: "192.168.10.215",
-    MODULE_AUDIO: "192.168.10.215",
-    MODULE_AUDIOFTS: "192.168.10.215",
+    MODULE_SOUND: "192.168.10.215",
+    MODULE_SOUNDFTS: "192.168.10.215",
     MODULE_SOUNDCLASS: "192.168.10.215",
     MODULE_EXPRCLASS: "192.168.10.215",
     MODULE_GESTURECLASS: "192.168.10.215",
-    MODULE_COMPOUND: "192.168.10.215"
+    MODULE_COMPOUND: "192.168.10.215",
+    MODULE_PRESENT: "192.168.10.215"
 }
 
 @dataclass

@@ -1,5 +1,4 @@
 # import time
-import numpy as np
 from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
@@ -14,7 +13,7 @@ MODULE_GESTURECLASS = "Gestureclass"
 class GestureclassMessage:
     timestamp: float = 0.0
     valid: bool = True
-    face_class: int = 0
+    gesture_class: int = 0
 
 
 @dataclass
