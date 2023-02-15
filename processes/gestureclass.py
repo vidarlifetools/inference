@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.pose import PoseMessage
-from utilities.gesture_utils import gesture_prediction
+from gesture_utils import gesture_prediction
 import time
 
 

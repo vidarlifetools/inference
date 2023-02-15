@@ -89,7 +89,7 @@
         "window_step": 0.016,
         "feature_length": 0.512,
         "feature_step": 0.128,
-        "use_pitch": false
+        "use_pitch": true
     },
     "Soundclass": {
         "name": "Soundclass",

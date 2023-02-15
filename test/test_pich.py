@@ -8,6 +8,7 @@ import soundfile as sf
 import numpy as np
 from scipy import signal
 from scipy.signal import butter, lfilter, freqz
+from scipy.ndimage.interpolation import shift
 
 def butter_lowpass(cutoff, fs, order=5):
     return butter(order, cutoff, fs=fs, btype='low', analog=False)
@@ -47,10 +48,14 @@ for i in range(len(freq_estimates)):
 seq_length = int(sample_rate*0.512)
 seq_step = int(sample_rate*0.128)
 freq_estimates = np.array(())
+pitch_buffer = np.zeros((int(0.512/0.016),), dtype=float)
 for start_sample in range(0, len(audio_sample)-seq_length, seq_step):
-    estimates =pitch(audio_sample[start_sample:start_sample+seq_length], sample_rate)
+    #estimates =pitch(audio_sample[start_sample:start_sample+seq_length], sample_rate)
+    estimates =pitch(audio_sample[start_sample:start_sample+seq_step], sample_rate)
     estimates = np.append(estimates, 0.0)
     freq_estimates = np.append(freq_estimates, estimates)
+    shift(pitch_buffer, -8, cval = 0.0)
+    pitch_buffer[24:32] = estimates
 print(f"Finished, freq estimate size is {len(freq_estimates)}")
 plt.plot(freq_estimates, linewidth=2)
 default_x_ticks = range(0, len(freq_estimates), 100)
