@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.soundfts import SoundftsMessage
-from sound_utils import sound_prediction
+from sound_utils import SoundPrediction
 import time
 
 MODULE_SOUNDCLASS = "Soundclass"
@@ -32,7 +32,7 @@ class Soundclass(DataModule):
     def __init__(self, *args):
         super().__init__(*args)
 
-        self.sound_prediction = sound_prediction(
+        self.sound_prediction = SoundPrediction(
             self.config.model_filename_split_sound,
             self.config.model_filename_client,
             self.config.model_filename_sound,

@@ -7,6 +7,7 @@ from processes.person import PersonMessage
 import cv2
 import mediapipe as mp
 import time
+from expr_utils import ExprFeature
 
 MODULE_EXPR = "Expr"
 
@@ -21,10 +22,6 @@ class ExprMessage:
 class ExprConfig:
     name: str = ""
     view: bool = False
-    max_num_faces: int = 1
-    refine_landmarks: bool = True
-    min_detection_confidence: float = 0.5
-    min_tracking_confidence: float = 0.5
 
 
 class Expr(DataModule):
@@ -34,35 +31,14 @@ class Expr(DataModule):
     def __init__(self, *args):
         super().__init__(*args)
 
-        self.mediapipe_face = mp.solutions.face_mesh.FaceMesh(
-            max_num_faces=self.config.max_num_faces,
-            refine_landmarks=self.config.refine_landmarks,
-            min_detection_confidence=self.config.min_detection_confidence,
-            min_tracking_confidence=self.config.min_tracking_confidence
-        )
+        self.expr_feature = ExprFeature()
 
     def process_data_msg(self, msg):
         if type(msg) == PersonMessage:
-            #self.logger.info(f"Expr processing started")
-            results = self.mediapipe_face.process(msg.image)
-            face_landmarks = np.zeros((478, 3), dtype=float)
-            if results.multi_face_landmarks:
+            face_landmarks, valid, mp_landmarks = self.expr_feature.get(msg.image)
+            if valid:
                 if self.config.view:
-                    self.view_face(msg.image, results.multi_face_landmarks[0])
-                first = True
-                for landmarks in results.multi_face_landmarks:
-                    i=0
-                    if first:
-                        #print(f"Length og landmarks {len(landmarks.landmark)}")
-                        for landmark in landmarks.landmark:
-                            face_landmarks[i, :] = [landmark.x * msg.image.shape[1],
-                                                    landmark.y * msg.image.shape[0],
-                                                    landmark.z * -1000.0]
-                            i += 1
-                        first = False
-                face_landmarks = np.matmul(face_landmarks, [[1, 0, 0], [0, -1, 0], [0, 0, -1]])
-
-                #print(f"Expr landmarks found, {len(results.multi_face_landmarks)}, {len(results.multi_face_landmarks[0])}")
+                    self.view_face(msg.image, mp_landmarks)
                 return ExprMessage(msg.timestamp, True, face_landmarks, msg.image)
             else:
                 return ExprMessage(msg.timestamp, False, None, msg.image)

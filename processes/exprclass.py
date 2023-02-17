@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.expr import ExprMessage
-from expr_utils import expr_prediction
+from expr_utils import ExprPrediction
 import time
 
 
@@ -29,7 +29,7 @@ class Exprclass(DataModule):
     def __init__(self, *args):
         super().__init__(*args)
 
-        self.expr_prediction = expr_prediction( self.config.model_filename_expression)
+        self.expr_prediction = ExprPrediction( self.config.model_filename_expression)
 
     def process_data_msg(self, msg):
         if type(msg) == ExprMessage:

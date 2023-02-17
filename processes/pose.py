@@ -7,6 +7,8 @@ from processes.person import PersonMessage
 import cv2
 import mediapipe as mp
 import time
+from feature_constants import keypoint_mapping_table
+from gesture_utils import PoseFeature
 
 MODULE_POSE = "Pose"
 
@@ -28,8 +30,6 @@ class PoseConfig:
     min_detection_confidence: float = 0.5
     min_tracking_confidence: float = 0.5
 
-# Map from Mediapipe pose to old pose model with 17 keypoints
-mapping_table = [0, -1, 1, -1, -1, 2, -1, 3, 4, -1, -1, 5,6,7,8,9,10,-1,-1,-1,-1,-1,-1,11 ,12, 13, 14, 15, 16, -1, -1, -1, -1]
 
 
 class Face(DataModule):
@@ -38,30 +38,15 @@ class Face(DataModule):
 
     def __init__(self, *args):
         super().__init__(*args)
-
-        self.mp_pose = mp.solutions.pose.Pose(
-            #static_image_mode=self.config.static_image_mode,
-            #model_complexity=self.config.model_complexity,
-            #enable_segmentation=self.config.enable_segmentation,
-            min_detection_confidence=self.config.min_detection_confidence,
-            min_tracking_confidence=self.config.min_tracking_confidence
-        )
-
+        self.pose_feature = PoseFeature()
+        pass
     def process_data_msg(self, msg):
         if type(msg) == PersonMessage:
             #self.logger.info(f"Pose started processing at {time.time()}")
-            results = self.mp_pose.process(msg.image)
-            if results.pose_world_landmarks.landmark:
+            pose_3d, valid, mp_pose_landmarks = self.pose_feature.get(msg.image)
+            if valid:
                 if self.config.view:
-                    self.vew_pose(msg.image, results.pose_landmarks)
-
-                pose_3d = np.zeros((17, 5), dtype=np.float32)
-                for i, landmark in enumerate(results.pose_world_landmarks.landmark):
-                    if mapping_table[i] != -1:
-                        conf = landmark.visibility if (mapping_table[i] > 12 and landmark.visibility > 0.8) or (
-                                    mapping_table[i] <= 12) else 0.0
-                        pose_3d[mapping_table[i], :] = [landmark.x * 1000.0, landmark.y * 1000.0, landmark.z * 1000.0,
-                                                        conf, 0.0]
+                    self.vew_pose(msg.image, mp_pose_landmarks)
                 return PoseMessage(msg.timestamp, True, pose_3d, msg.image)
             else:
                 return PoseMessage(msg.timestamp, False, None, msg.image)

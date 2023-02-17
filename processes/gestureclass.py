@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.pose import PoseMessage
-from gesture_utils import gesture_prediction
+from gesture_utils import GesturePrediction
 import time
 
 
@@ -30,14 +30,14 @@ class Gestureclass(DataModule):
     def __init__(self, *args):
         super().__init__(*args)
 
-        self.gesture_prediction = gesture_prediction( self.config.model_filename_pose, self.config.model_filename_gesture, self.logger)
+        self.gesture_prediction = GesturePrediction( self.config.model_filename_pose, self.config.model_filename_gesture, self.logger)
 
     def process_data_msg(self, msg):
         if type(msg) == PoseMessage:
             #self.logger.info(f"Gestureclass processing started")
             gesture_class = 0
             if msg.valid:
-                gesture_class = self.gesture_prediction.get_class(msg.keypoints)
+                gesture_class, gesture_probs = self.gesture_prediction.get_class(msg.keypoints)
             return GestureclassMessage(msg.timestamp, msg.valid, gesture_class)
 
 

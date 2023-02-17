@@ -48,11 +48,7 @@
     "Expr": {
         "name": "Expr",
         "view": false,
-        "model_selection": 1,
-        "max_num_faces": 1,
-        "refine_landmarks": true,
-        "min_detection_confidence": 0.5,
-        "min_tracking_confidence": 0.5
+        "model_selection": 1
     },
     "Pose": {
         "name": "Pose",
@@ -77,19 +73,7 @@
         "sound_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.wav"
     },
     "Soundfts": {
-        "name": "Soundfts",
-        "mean_norm": true,
-        "windowing": true,
-        "pre_emphasis": true,
-        "ampl_norm": false,
-        "noise_reduce": false,
-        "n_mfcc": 12,
-        "sample_rate": 16000,
-        "window_length": 0.032,
-        "window_step": 0.016,
-        "feature_length": 0.512,
-        "feature_step": 0.128,
-        "use_pitch": true
+        "name": "Soundfts"
     },
     "Soundclass": {
         "name": "Soundclass",
