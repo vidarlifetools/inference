@@ -61,7 +61,10 @@
     },
     "Person": {
         "name": "Person",
-        "scale": 1.0
+        "scale": 1.0,
+        "tracking": true,
+        "tracking_threshold": 0.5,
+        "tracking_info_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.json"
     },
     "Camera": {
         "name": "Camera",
