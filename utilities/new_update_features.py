@@ -15,7 +15,7 @@ import soundfile as sf
 from sound_utils import SoundFeature
 from gesture_utils import PoseFeature
 from expr_utils import ExprFeature
-from person_utils import Person
+from person_utils import PersonBbox
 from feature_constants import sound_sample_rate, sound_feature_length, sound_feature_step
 
 
@@ -198,7 +198,7 @@ class UpdateFeatures:
             else:
                 tracking = False
                 tracking_bbox = []
-            person = Person(tracking, tracking_bbox, tracking_frame_no)
+            person = PersonBbox(tracking, tracking_bbox, tracking_frame_no)
 
             # Get the face image and store them frame by frame
             video_file = join(self.config["destination_directory"], client, "raw", file_id + ".mp4")
@@ -244,7 +244,7 @@ class UpdateFeatures:
             else:
                 tracking = False
                 tracking_bbox = []
-            person = Person(tracking, tracking_bbox, tracking_frame_no)
+            person = PersonBbox(tracking, tracking_bbox, tracking_frame_no)
 
             # Get the skeleton image and store them frame by frame
             video_file = join(self.config["destination_directory"], client, "raw", file_id + ".mp4")
@@ -354,7 +354,7 @@ class UpdateFeatures:
                 start_sample = int(ann["start"] * sound_sample_rate)
                 end_sample = int(ann["end"] * sound_sample_rate)
                 for idx in range(start_sample, end_sample, step):
-                    sound_fts = sound_feature.get_feature(data[idx:idx+length])
+                    sound_fts = self.sound_feature.get_feature(data[idx:idx+length])
                     start_time_ms = int(1000 * idx / sound_sample_rate)
                     with open(join(sound_dir, sub_dirs[ann["label_id"]], str(start_time_ms) + ".data"), "wb") as f:
                         pickle.dump(SoundData(True, sound_fts), f)

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from framework.module import DataModule
 from time import sleep
 from processes.camera import CameraMessage
-from person_utils import Person
+from person_utils import PersonBbox
 import cv2
 import time
 import json
@@ -43,7 +43,7 @@ class Person(DataModule):
                 else:
                     self.config.tracking = False
 
-        self.person = Person(self.config.tracking, tracking_bbox, tracking_first_frame)
+        self.person = PersonBbox(self.config.tracking, tracking_bbox, tracking_first_frame, scale=0.5)
         print("Person initiated")
 
     def process_data_msg(self, msg):
