@@ -32,6 +32,9 @@ class Camera(DataModule):
     def __init__(self, *args):
         super().__init__(*args)
         self.cap = cv2.VideoCapture(self.config.video_path)
+        if not self.cap.isOpened():
+            self.logger.error(f"Video file not found: {self.config.video_path}")
+
         self.frame_no = 0
 
     def produce_data(self):
