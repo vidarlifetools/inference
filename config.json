@@ -64,16 +64,16 @@
         "scale": 1.0,
         "tracking": true,
         "tracking_threshold": 0.5,
-        "tracking_info_path": "/home/vidar/projects/annotation_data/ahmed/raw/2021-03-25-13-06-22-184291.json"
+        "tracking_info_path": ""
     },
     "Camera": {
         "name": "Camera",
         "fps": 15,
-        "video_path": "/home/vidar/projects/annotation_data/ahmed/raw/2021-03-25-13-06-22-184291.mp4"
+        "video_path": ""
     },
     "Sound": {
         "name": "Sound",
-        "sound_path": "/home/vidar/projects/annotation_data/ahmed/raw/2021-03-25-13-06-22-184291.wav"
+        "sound_path": ""
     },
     "Soundfts": {
         "name": "Soundfts"
@@ -82,23 +82,24 @@
         "name": "Soundclass",
         "histogram_depth": 6,
         "histogram_limit": 0.5,
-        "model_filename_client": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_client.pkl",
-        "model_filename_sound": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_sound.pkl",
-        "model_filename_split_sound": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_split_sound.pkl"
+        "model_filename_client": "",
+        "model_filename_sound": "",
+        "model_filename_split_sound": ""
     },
     "Faceclass": {
         "name": "Faceclass",
-        "model_filename_expression": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/svm_expression.pkl"
+        "model_filename_expression": ""
     },
     "Gestureclass": {
         "name": "Gestureclass",
-        "model_filename_pose": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/svm_pose.pkl",
-        "model_filename_gesture": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/svm_gesture.pkl"
+        "model_filename_pose": "",
+        "model_filename_gesture": ""
     },
     "Compound": {
         "name": "Compound",
-        "nof_gesture_classes": 10,
-        "nof_Face_classes": 10,
-        "nof_sound_classes": 10
+        "model_filename_gesture": "",
+        "model_filename_face": "",
+        "model_filename_sound": "",
+        "model_filename_compound": ""
     }
 }
