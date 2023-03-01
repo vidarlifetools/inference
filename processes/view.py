@@ -14,7 +14,7 @@ MODULE_VIEW = "View"
 class ViewMessage:
     fps: int = 15
     image: np.array = None
-
+    frame_no: int = -1
 
 @dataclass
 class ViewConfig:
@@ -32,6 +32,7 @@ class View(DataModule):
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
             # resize image
+            frame_no = msg.frame_no
             width = int(msg.image.shape[1] * self.config.scale)
             height = int(msg.image.shape[0] * self.config.scale)
             dim = (width, height)

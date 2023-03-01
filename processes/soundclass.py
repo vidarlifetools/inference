@@ -5,6 +5,7 @@ from time import sleep
 from processes.soundfts import SoundftsMessage
 from sound_utils import SoundPrediction
 import time
+from constants import *
 
 MODULE_SOUNDCLASS = "Soundclass"
 
@@ -13,6 +14,7 @@ class SoundclassMessage:
     timestamp: list = None
     valid: list = None
     sound_class: list = None
+    frame_no: int = -1
 
 
 @dataclass
@@ -42,10 +44,14 @@ class Soundclass(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == SoundftsMessage:
-            #self.logger.info(f"Soundclass processing started")
-            valid, sound_class = self.sound_prediction.get_class(msg.feature)
-            #print(f"Sound feature {msg.feature[i]} class {sound_class}")
-            return SoundclassMessage(msg.timestamp, valid, sound_class)
+            frame_no = msg.frame_no
+            if msg.valid:
+                #self.logger.info(f"Soundclass processing started")
+                valid, sound_class = self.sound_prediction.get_class(msg.feature)
+                #print(f"Sound feature {msg.feature[i]} class {sound_class}")
+                return SoundclassMessage(msg.timestamp, valid, sound_class, frame_no)
+            else:
+                return SoundclassMessage(msg.timestamp, False, MISSING_CLASS_SOUND, frame_no)
 
 
 def soundclass(start, stop, config, status_uri, data_in_uris, data_out_ur):

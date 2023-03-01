@@ -16,6 +16,7 @@ class CameraMessage:
     timestamp: float = 0.0
     fps: int = 15
     image: np.array = None
+    frame_no: int = -1
 
 
 @dataclass
@@ -49,7 +50,7 @@ class Camera(DataModule):
                 self.frame_no += 1
                 timestamp = time()
                 #self.logger.info(f"Camers sending frame {self.frame_no} with timestamp {timestamp}")
-                return CameraMessage(timestamp, self.config.fps, frame)
+                return CameraMessage(timestamp, self.config.fps, frame, frame_no=self.frame_no)
         else:
             return None
 

@@ -16,6 +16,7 @@ class PersonMessage:
     timestamp: float = 0.0
     fps: int = 15
     image: np.array = None
+    frame_no: int = -1
 
 
 @dataclass
@@ -40,6 +41,8 @@ class Person(DataModule):
                     tracking_bbox = tracking_data["target_person"]
                     if "target_person_frame" in tracking_data.keys():
                         tracking_first_frame = tracking_data["target_person_frame"]
+                    else:
+                        tracking_first_frame = 0
                 else:
                     self.config.tracking = False
 
@@ -49,6 +52,7 @@ class Person(DataModule):
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
             #self.logger.info(f"Person processing started")
+            frame_no = msg.frame_no
             if self.config.scale != 1.0:
                 width = int(msg.image.shape[1] * self.config.scale)
                 height = int(msg.image.shape[0] * self.config.scale)
@@ -63,7 +67,8 @@ class Person(DataModule):
             else:
                 # Crop the image to the person
                 x1, y1, x2, y2 = bbox
-                return PersonMessage(msg.timestamp, msg.fps, resized[y1:y2, x1:x2].copy() )
+                return PersonMessage(msg.timestamp, msg.fps, resized[y1:y2, x1:x2].copy(),
+                                     frame_no=frame_no)
         else:
             return None
 

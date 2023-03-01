@@ -17,6 +17,7 @@ class FaceMessage:
     valid: bool = True
     landmarks: np.array = None
     image: np.array = None
+    frame_no: int = -1
 
 @dataclass
 class FaceConfig:
@@ -35,13 +36,16 @@ class Face(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == PersonMessage:
+
+            frame_no = msg.frame_no
+
             face_landmarks, valid, mp_landmarks = self.face_feature.get(msg.image)
             if valid:
                 if self.config.view:
                     self.view_face(msg.image, mp_landmarks)
-                return FaceMessage(msg.timestamp, True, face_landmarks, msg.image)
+                return FaceMessage(msg.timestamp, True, face_landmarks, msg.image, frame_no)
             else:
-                return FaceMessage(msg.timestamp, False, None, msg.image)
+                return FaceMessage(msg.timestamp, False, None, msg.image, frame_no)
         else:
             return None
 

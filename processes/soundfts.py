@@ -20,6 +20,7 @@ class SoundftsMessage:
     timestamp: list = None
     valid: list = True
     feature: list = None
+    frame_no: int = -1
 
 
 @dataclass
@@ -41,11 +42,15 @@ class Soundfts(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == SoundMessage:
-            #self.logger.info(f"Soundfts processing started")
+            frame_no = msg.frame_no
+
+            self.logger.info(f"Soundfts processing started for frame {frame_no}")
             self.ring_buffer.put(msg.samples)
             if self.ring_buffer.get_length() > self.audio_buffer_size:
                 self.ring_buffer.get(self.audio_buffer, self.audio_buffer_size, self.audio_buffer_step)
-                return SoundftsMessage(msg.timestamp, True, self.sound_feature.get_feature(self.audio_buffer))
+                return SoundftsMessage(msg.timestamp, True, self.sound_feature.get_feature(self.audio_buffer), frame_no)
+            else:
+                return SoundftsMessage(msg.timestamp, False, None, frame_no)
 
 
 def soundfts(start, stop, config, status_uri, data_in_uris, data_out_ur):

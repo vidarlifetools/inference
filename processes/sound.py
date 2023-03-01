@@ -9,12 +9,14 @@ import time
 
 MODULE_SOUND = "Sound"
 
+
 @dataclass
 class SoundMessage:
     timestamp: float = 0.0
     valid: bool = True
     sr: int = 16000
     samples: np.array = None
+    frame_no: int = -1
 
 
 @dataclass
@@ -32,20 +34,24 @@ class Sound(DataModule):
         sound_file = self.config.sound_path
         self.samples, self.sr = sf.read(sound_file)
         if len(self.samples.shape) > 1:
-            self.samples = self.samples[:,0]
+            self.samples = self.samples[:, 0]
         self.sound_idx = 0
 
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
-            #self.logger.info(f"Sound processing started")
             # Create a buffer with audio samples covering time between frames
+            frame_no = msg.frame_no
             no_of_samples = int(self.sr / msg.fps)
+            self.logger.info(f"Sound processing started for frame {frame_no}")
+
+            # If sound buffer filled, return valid SoundMessage
             if self.sound_idx + no_of_samples < len(self.samples):
-                sound_buffer = self.samples[self.sound_idx:self.sound_idx+no_of_samples]
+                sound_buffer = self.samples[self.sound_idx:self.sound_idx + no_of_samples]
                 self.sound_idx += no_of_samples
-                return SoundMessage(msg.timestamp, True, self.sr, sound_buffer)
-        #else:
-        #    return AudioMessage(False, self.sr, None)
+                return SoundMessage(msg.timestamp, True, self.sr, sound_buffer, frame_no)
+            # Otherwise, return invalid SoundMessage, which sends notice that sound class cannot be computed
+            else:
+                SoundMessage(msg.timestamp, valid=False, sr=None, samples=None, frame_no=frame_no)
 
 
 def sound(start, stop, config, status_uri, data_in_uris, data_out_ur):

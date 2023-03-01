@@ -18,6 +18,7 @@ class PoseMessage:
     valid: bool = True
     keypoints: np.array = None
     image: np.array = None
+    frame_no: int = None
 
 
 @dataclass
@@ -39,17 +40,19 @@ class Face(DataModule):
     def __init__(self, *args):
         super().__init__(*args)
         self.pose_feature = PoseFeature()
+
         pass
     def process_data_msg(self, msg):
         if type(msg) == PersonMessage:
+            frame_no = msg.frame_no
             #self.logger.info(f"Pose started processing at {time.time()}")
             pose_3d, valid, mp_pose_landmarks = self.pose_feature.get(msg.image)
             if valid:
                 if self.config.view:
                     self.vew_pose(msg.image, mp_pose_landmarks)
-                return PoseMessage(msg.timestamp, True, pose_3d, msg.image)
+                return PoseMessage(msg.timestamp, True, pose_3d, msg.image, frame_no)
             else:
-                return PoseMessage(msg.timestamp, False, None, msg.image)
+                return PoseMessage(msg.timestamp, False, None, msg.image, frame_no)
         else:
             return None
     def vew_pose(self, image, landmarks):
