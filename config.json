@@ -8,7 +8,7 @@
                 "Present"
             ],
             "Person": [
-                "Expr",
+                "Face",
                 "Pose"
             ],
             "Sound": [
@@ -20,10 +20,10 @@
             "Soundclass": [
                 "Compound"
             ],
-            "Expr": [
-                "Exprclass"
+            "Face": [
+                "Faceclass"
             ],
-            "Exprclass": [
+            "Faceclass": [
                 "Compound"
             ],
             "Pose": [
@@ -45,8 +45,8 @@
         "name": "Present",
         "scale": 0.2
     },
-    "Expr": {
-        "name": "Expr",
+    "Face": {
+        "name": "Face",
         "view": false,
         "model_selection": 1
     },
@@ -64,16 +64,16 @@
         "scale": 1.0,
         "tracking": true,
         "tracking_threshold": 0.5,
-        "tracking_info_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.json"
+        "tracking_info_path": "/home/vidar/projects/annotation_data/ahmed/raw/2021-03-25-13-06-22-184291.json"
     },
     "Camera": {
         "name": "Camera",
         "fps": 15,
-        "video_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.mp4"
+        "video_path": "/home/vidar/projects/annotation_data/ahmed/raw/2021-03-25-13-06-22-184291.mp4"
     },
     "Sound": {
         "name": "Sound",
-        "sound_path": "/home/vidar/projects/annotation_data/lukas/raw/2022-01-20-10-07-38-036639.wav"
+        "sound_path": "/home/vidar/projects/annotation_data/ahmed/raw/2021-03-25-13-06-22-184291.wav"
     },
     "Soundfts": {
         "name": "Soundfts"
@@ -86,8 +86,8 @@
         "model_filename_sound": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_sound.pkl",
         "model_filename_split_sound": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/mlp_split_sound.pkl"
     },
-    "Exprclass": {
-        "name": "Exprclass",
+    "Faceclass": {
+        "name": "Faceclass",
         "model_filename_expression": "/home/vidar/projects/annotation_data/lukas/machine-learning/Models/svm_expression.pkl"
     },
     "Gestureclass": {
@@ -98,7 +98,7 @@
     "Compound": {
         "name": "Compound",
         "nof_gesture_classes": 10,
-        "nof_expr_classes": 10,
+        "nof_Face_classes": 10,
         "nof_sound_classes": 10
     }
 }
