@@ -33,7 +33,7 @@ class PoseConfig:
 
 
 
-class Face(DataModule):
+class Pose(DataModule):
     name = MODULE_POSE
     config_class = PoseConfig
 
@@ -45,7 +45,6 @@ class Face(DataModule):
     def process_data_msg(self, msg):
         if type(msg) == PersonMessage:
             frame_no = msg.frame_no
-            #self.logger.info(f"Pose started processing at {time.time()}")
             pose_3d, valid, mp_pose_landmarks = self.pose_feature.get(msg.image)
             if valid:
                 if self.config.view:
@@ -69,7 +68,7 @@ class Face(DataModule):
 
 
 def pose(start, stop, config, status_uri, data_in_uris, data_out_ur):
-    proc = Face(config, status_uri, data_in_uris, data_out_ur)
+    proc = Pose(config, status_uri, data_in_uris, data_out_ur)
     print(f"Pose started at {time.time()}")
     while not start.is_set():
         sleep(0.1)

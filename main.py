@@ -12,6 +12,8 @@ import socket
 from multiprocessing import Process, set_start_method
 from multiprocessing import Event
 
+import sys
+sys.path.append("/nr/bamjo/user/utseth/knowmeai/knowmeai_common/")
 
 from framework.module import Module
 import framework.message as message
@@ -30,10 +32,17 @@ from processes.gestureclass import gestureclass, MODULE_GESTURECLASS
 from processes.compound import compound, MODULE_COMPOUND
 from processes.present import present, MODULE_PRESENT
 
+
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s:%(levelname)s:Controller:%(message)s",
+    level=logging.DEBUG
 )
+base_logger = logging.getLogger('')
+formatter = logging.Formatter("%(asctime)s:%(levelname)s:Controller:%(message)s")
+log_path = "log/ahmed/2022-05-23-13-01-24-033369.log"
+file_logger = logging.FileHandler(log_path)
+file_logger.setFormatter(formatter)
+base_logger.addHandler(file_logger)
+
 
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -71,18 +80,18 @@ MODULES = {
     MODULE_PRESENT: present
 }
 HOST_IPS = {
-    MODULE_CAMERA: "192.168.10.215",
-    MODULE_VIEW: "192.168.10.215",
-    MODULE_PERSON: "192.168.10.215",
-    MODULE_FACE: "192.168.10.215",
-    MODULE_POSE: "192.168.10.215",
-    MODULE_SOUND: "192.168.10.215",
-    MODULE_SOUNDFTS: "192.168.10.215",
-    MODULE_SOUNDCLASS: "192.168.10.215",
-    MODULE_FACECLASS: "192.168.10.215",
-    MODULE_GESTURECLASS: "192.168.10.215",
-    MODULE_COMPOUND: "192.168.10.215",
-    MODULE_PRESENT: "192.168.10.215"
+    MODULE_CAMERA: "",
+    MODULE_VIEW: "",
+    MODULE_PERSON: "",
+    MODULE_FACE: "",
+    MODULE_POSE: "",
+    MODULE_SOUND: "",
+    MODULE_SOUNDFTS: "",
+    MODULE_SOUNDCLASS: "",
+    MODULE_FACECLASS: "",
+    MODULE_GESTURECLASS: "",
+    MODULE_COMPOUND: "",
+    MODULE_PRESENT: ""
 }
 
 @dataclass
@@ -113,7 +122,7 @@ class Controller(Module):
         assert modules
         self.modules = dict()
         local_ip = get_local_ip()
-        #logging.info(f"This machine has IP address {local_ip}")
+        logging.info(f"This machine has IP address {local_ip}")
         data_ports = dict(zip(modules.nodes, range(60030, 60050)))
 
         for n in modules.nodes:
@@ -123,20 +132,19 @@ class Controller(Module):
             if list(modules.successors(n)):
                 #out = f"tcp://*:{data_ports[n]}"
                 out = f"tcp://*:{data_ports[n]}"
-                #logging.info(f"Module {str(n)} has port {data_ports[n]} and IP address {HOST_IPS[n]}")
+                logging.info(f"Module {str(n)} has port {data_ports[n]} and IP address {HOST_IPS[n]}")
 
             config = self.config.module_configs.get(n)
             # Only include modules that runs on the same machine, have same IP address
             if local_ip == HOST_IPS[n]:
-                #logging.info(f"{n} is running on this machine")
+                logging.info(f"{n} is running on this machine")
 
                 self.modules[n] = Process(target=MODULES[n], args=(
-                    self.start_event, self.stop_event, config, f"tcp://localhost:{message.STATUS_PORT}", ins, out ))
-#                self.modules[n] = MODULES[n](
-#                    config, f"tcp://localhost:{message.STATUS_PORT}", ins, out
-#                )
-            #else:
-                #logging.info(f"{n} is running on a machine with IP address {HOST_IPS[n]}")
+                    self.start_event, self.stop_event, config, f"tcp://localhost:{message.STATUS_PORT}", ins, out))
+                # self.modules[n] = MODULES[n](
+                #    config, f"tcp://localhost:{message.STATUS_PORT}", ins, out)
+            else:
+                logging.info(f"{n} is running on a machine with IP address {HOST_IPS[n]}")
 
         logging.info("Initialized")
 
@@ -249,7 +257,7 @@ def snap():
 if __name__ == '__main__':
     set_start_method('spawn')
     # Activating the virtual environment
-    os.system("source /home/hsnews/projects/pick_n_place/venv/bin/activate")
+    # os.system("source /home/hsnews/projects/pick_n_place/venv/bin/activate")
 
     if TRACE_MEM:
         tracemalloc.start()

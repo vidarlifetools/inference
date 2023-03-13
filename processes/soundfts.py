@@ -44,7 +44,7 @@ class Soundfts(DataModule):
         if type(msg) == SoundMessage:
             frame_no = msg.frame_no
 
-            self.logger.info(f"Soundfts processing started for frame {frame_no}")
+            self.logger.debug(f"Soundfts processing started for frame {frame_no}")
             self.ring_buffer.put(msg.samples)
             if self.ring_buffer.get_length() > self.audio_buffer_size:
                 self.ring_buffer.get(self.audio_buffer, self.audio_buffer_size, self.audio_buffer_step)

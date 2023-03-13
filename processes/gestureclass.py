@@ -36,7 +36,7 @@ class Gestureclass(DataModule):
     def process_data_msg(self, msg):
         if type(msg) == PoseMessage:
             frame_no = msg.frame_no
-            # self.logger.info(f"Gestureclass processing started")
+            self.logger.debug(f"Gestureclass processing started")
             gesture_class = MISSING_CLASS_GESTURE
             if msg.valid:
                 gesture_class, gesture_probs = self.gesture_prediction.get_class(msg.keypoints)

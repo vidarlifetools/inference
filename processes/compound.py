@@ -53,28 +53,46 @@ class Compound(DataModule):
                                                       self.config.model_filename_sound)
 
     def process_data_msg(self, msg):
+
         if type(msg) == SoundclassMessage:
-            self.logger.info(f"Sound ({msg.timestamp}, frame_no {msg.frame_no}):"
+            self.logger.debug(f"t{time.time()}: {type(msg)}")
+            self.logger.debug(f"Sound ({msg.timestamp}, frame_no {msg.frame_no}):"
                              f" processing time = {time.time() - msg.timestamp:.3f}")
             self.sound.append(msg.sound_class)
             self.sound_frames.append(msg.frame_no)
-        elif type(msg) == FaceclassMessage:
-            self.logger.info(f"Expression ({msg.timestamp}, frame_no {msg.frame_no}):"
+        if type(msg) == FaceclassMessage:
+            self.logger.debug(f"t{time.time()}: {type(msg)}")
+            self.logger.debug(f"Expression ({msg.timestamp}, frame_no {msg.frame_no}):"
                              f" processing time = {time.time() - msg.timestamp:.3f}")
             self.face.append(msg.face_class)
             self.face_frames.append(msg.frame_no)
-        elif type(msg) == GestureclassMessage:
-            self.logger.info(f"Gesture ({msg.timestamp}, frame_no {msg.frame_no}):"
+        if type(msg) == GestureclassMessage:
+            self.logger.debug(f"t{time.time()}: {type(msg)}")
+            self.logger.debug(f"Gesture ({msg.timestamp}, frame_no {msg.frame_no}):"
                              f" processing time = {time.time() - msg.timestamp:.3f}")
             self.gesture.append(msg.gesture_class)
             self.gesture_sequence.append([msg.frame_no - GESTURE_BUFFER_LEN, msg.frame_no])
-        else:
-            pass
 
         # Check that some frames have been added for all sub-models
-        if np.all(np.array([len(self.sound_frames), len(self.gesture_sequence), len(self.face_frames)]) > 0):
+        buffer_lengths = []
+        if INCLUDE_SOUND:
+            buffer_lengths.append(len(self.sound_frames))
+        if INCLUDE_GESTURE:
+            buffer_lengths.append(len(self.gesture_sequence))
+        if INCLUDE_FACE_EXPR:
+            buffer_lengths.append(len(self.face_frames))
+
+        if np.all(buffer_lengths) > 0:
             # Find latest frame number with predictions from all submodels
-            current_frame = np.min([self.sound_frames[-1], self.gesture_sequence[-1][1], self.face_frames[-1]])
+            relevant_frames = []
+            if INCLUDE_SOUND:
+                relevant_frames.append(self.sound_frames[-1])
+            if INCLUDE_GESTURE:
+                relevant_frames.append(self.gesture_sequence[-1][1])
+            if INCLUDE_FACE_EXPR:
+                relevant_frames.append(self.face_frames[-1])
+
+            current_frame = np.min(relevant_frames)
 
             # If current frame matches next prediction frame, run prediction
             if current_frame == self.next_prediction_frame:

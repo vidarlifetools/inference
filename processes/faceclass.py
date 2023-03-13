@@ -40,6 +40,7 @@ class Faceclass(DataModule):
             frame_no = msg.frame_no
             if msg.valid:
                 face_class = self.expr_prediction.get_class(msg.landmarks)
+            self.logger.debug(f"Face ({msg.timestamp}, frame_no {msg.frame_no}): face class {face_class}")
             return FaceclassMessage(msg.timestamp, msg.valid, face_class, frame_no)
 
 

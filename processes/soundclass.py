@@ -46,9 +46,8 @@ class Soundclass(DataModule):
         if type(msg) == SoundftsMessage:
             frame_no = msg.frame_no
             if msg.valid:
-                #self.logger.info(f"Soundclass processing started")
+                self.logger.debug(f"Soundclass processing started")
                 valid, sound_class = self.sound_prediction.get_class(msg.feature)
-                #print(f"Sound feature {msg.feature[i]} class {sound_class}")
                 return SoundclassMessage(msg.timestamp, valid, sound_class, frame_no)
             else:
                 return SoundclassMessage(msg.timestamp, False, MISSING_CLASS_SOUND, frame_no)

@@ -51,7 +51,7 @@ class Person(DataModule):
 
     def process_data_msg(self, msg):
         if type(msg) == CameraMessage:
-            #self.logger.info(f"Person processing started")
+            self.logger.debug(f"Person processing started")
             frame_no = msg.frame_no
             if self.config.scale != 1.0:
                 width = int(msg.image.shape[1] * self.config.scale)

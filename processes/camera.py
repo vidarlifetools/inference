@@ -46,10 +46,10 @@ class Camera(DataModule):
             sleep(3)
         if self.cap.isOpened():
             ret, frame = self.cap.read()
+            self.frame_no += 1
             if ret:
-                self.frame_no += 1
                 timestamp = time()
-                #self.logger.info(f"Camers sending frame {self.frame_no} with timestamp {timestamp}")
+                self.logger.info(f"Camera sending frame {self.frame_no} with timestamp {timestamp}")
                 return CameraMessage(timestamp, self.config.fps, frame, frame_no=self.frame_no)
         else:
             return None

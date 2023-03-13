@@ -38,13 +38,14 @@ class Face(DataModule):
         if type(msg) == PersonMessage:
 
             frame_no = msg.frame_no
-
+            self.logger.debug(f"Face ({msg.timestamp}, frame_no {msg.frame_no}): Computing face landmarks")
             face_landmarks, valid, mp_landmarks = self.face_feature.get(msg.image)
             if valid:
                 if self.config.view:
                     self.view_face(msg.image, mp_landmarks)
                 return FaceMessage(msg.timestamp, True, face_landmarks, msg.image, frame_no)
             else:
+                self.logger.debug(f"Face ({msg.timestamp}, frame_no {msg.frame_no}): invalid landmarks")
                 return FaceMessage(msg.timestamp, False, None, msg.image, frame_no)
         else:
             return None

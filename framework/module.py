@@ -12,16 +12,9 @@ from zmq.log.handlers import PUBHandler
 debug = False
 show_time = False
 
-def get_remote_logger(name, uri, level=logging.INFO):
+def get_remote_logger(name, uri, log_path=None):
     logger = logging.getLogger(name)
-    logger.setLevel(level)
     formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s:%(message)s")
-
-    # sock = zmq.Context().socket(zmq.PUB)
-    # sock.connect(uri)
-    # logger.addHandler(PUBHandler(sock))
-    # logger.handlers[0].setFormatter(formatter)
-    # logger.propagate = False
 
     return logger
 

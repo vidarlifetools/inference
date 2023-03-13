@@ -42,7 +42,7 @@ class Sound(DataModule):
             # Create a buffer with audio samples covering time between frames
             frame_no = msg.frame_no
             no_of_samples = int(self.sr / msg.fps)
-            self.logger.info(f"Sound processing started for frame {frame_no}")
+            self.logger.debug(f"Sound processing started for frame {frame_no}")
 
             # If sound buffer filled, return valid SoundMessage
             if self.sound_idx + no_of_samples < len(self.samples):
